@@ -79,11 +79,20 @@ examples/         真实验证记录
 ## 验证
 
 ```sh
-node ~/.agents/skills/create-dsh-plugin/scripts/verify-dsh-plugin.mjs \
-  --plugin-dir /path/to/dsh-external-link --profile web
+# 装进一次性 profile 并启动——插件加载时抛错会让启动失败，这是唯一的真实激活校验
+dsh plugin --profile <scratch> add github:d0ublecl1ck/dsh-external-link
+dsh --profile <scratch> --dump-config | grep -A3 '== dsh-external-link'
+dsh --profile <scratch>
 ```
 
-真实记录（manifest/shape/install/compose/activate 五道门、路由探针、协议拒绝）见 [`examples/verification.md`](examples/verification.md)。
+然后在真实 profile 里挂载路由并探针：
+
+```sh
+dsh plugin --profile web add github:d0ublecl1ck/dsh-external-link
+curl -s -o /dev/null -w '%{http_code}' -X POST -H 'content-type: application/json' -d '{"url":"http://127.0.0.1:9/x"}' http://127.0.0.1:43129/external-link/open; echo   # 401 = 已挂载且被栅栏拦下
+```
+
+真实记录（manifest / shape / install / compose / activate 五道门、路由探针、协议拒绝）见 [`examples/verification.md`](examples/verification.md)。
 
 ## License
 

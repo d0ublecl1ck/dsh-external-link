@@ -79,11 +79,21 @@ examples/         real verification transcripts
 ## Verification
 
 ```sh
-node ~/.agents/skills/create-dsh-plugin/scripts/verify-dsh-plugin.mjs \
-  --plugin-dir /path/to/dsh-external-link --profile web
+# install into a throwaway profile and boot it — a plugin that throws on load
+# makes the boot fail, which is the only real activation check
+dsh plugin --profile <scratch> add github:d0ublecl1ck/dsh-external-link
+dsh --profile <scratch> --dump-config | grep -A3 '== dsh-external-link'
+dsh --profile <scratch>
 ```
 
-Real transcripts (manifest/shape/install/compose/activate ladder, route probes, scheme rejection) are in [`examples/verification.md`](examples/verification.md).
+In a real profile, mount the route and probe it:
+
+```sh
+dsh plugin --profile web add github:d0ublecl1ck/dsh-external-link
+curl -s -o /dev/null -w '%{http_code}' -X POST -H 'content-type: application/json' -d '{"url":"http://127.0.0.1:9/x"}' http://127.0.0.1:43129/external-link/open; echo   # 401 = mounted and fenced
+```
+
+Real transcripts (manifest / shape / install / compose / activate ladder, route probes, scheme rejection) are in [`examples/verification.md`](examples/verification.md).
 
 ## License
 

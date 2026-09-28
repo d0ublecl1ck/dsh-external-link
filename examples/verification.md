@@ -89,11 +89,15 @@ and the module appears in the page roster:
 ## Reproduce
 
 ```sh
-# 1. bundle ladder
-node <create-dsh-plugin>/scripts/verify-dsh-plugin.mjs --plugin-dir /path/to/dsh-external-link
+# 1. install into a throwaway profile and boot it; a plugin that throws on load
+#    makes the boot fail, so a clean exit is the activation check
+dsh plugin --profile <scratch> add /path/to/dsh-external-link
+dsh --profile <scratch> --dump-config | grep -A3 '== dsh-external-link'
+dsh --profile <scratch>
 
 # 2. install into your own profile
 dsh plugin --profile web add /path/to/dsh-external-link
 
-# 3. reload the DSH window, then click any off-origin http/https link
+# 3. probe the route, then reload the DSH window and click an off-origin link
+curl -s -o /dev/null -w '%{http_code}' -X POST -H 'content-type: application/json' -d '{"url":"http://127.0.0.1:9/x"}' http://127.0.0.1:43129/external-link/open; echo
 ```
