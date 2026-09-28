@@ -1,0 +1,43 @@
+{
+  "name": "dsh-external-link",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Open http/https/mailto/tel anchor links from the DSH web GUI in the OS default application, including localhost URLs the Electron shell keeps in-app.",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "LICENSE",
+    "examples"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "external-link",
+    "default-browser",
+    "open-external"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d0ublecl1ck/dsh-external-link.git"
+  },
+  "homepage": "https://github.com/d0ublecl1ck/dsh-external-link#readme",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  }
+}
